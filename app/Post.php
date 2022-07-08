@@ -7,6 +7,9 @@ use Illuminate\Support\Str;
 
 class Post extends Model
 {
+    public function category(){
+        return $this->hasMany('App\Category');
+    }
     protected $fillable = [
         'title',
         'slug',
