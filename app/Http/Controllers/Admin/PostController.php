@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Post;
 
 class PostController extends Controller
 {
@@ -14,7 +15,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $posts = Post::OrderBy('id', 'desc')->get();
+        return view('admin.post.index', compact('posts'));
     }
 
     /**
@@ -24,7 +26,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.post.create');
     }
 
     /**
@@ -35,7 +37,22 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate(
+            [
+            'title' => 'required | max:50 | min:3',
+            'text' => 'required | min:10'
+            ]) ;
+
+        $data = $request->all();
+
+        $new_post = new Post();
+        $data['slug'] = Post::generateSlug($data['title']);
+        $new_post->fill($data);
+        $new_post->save();
+
+        return redirect()->route('admin.posts.show', $new_post);
+
+
     }
 
     /**
@@ -46,7 +63,8 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        //
+        $post = Post::find($id);
+        return view('admin.post.show', compact('post'));
     }
 
     /**
@@ -57,7 +75,8 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        //
+        $post = Post::find($id);
+        return view('admin.post.edit', compact('post'));
     }
 
     /**
@@ -69,7 +88,15 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = $request->validate([
+                'title' => 'required | max:50 | min:3',
+                'text' => 'required | min:10'
+            ]) ;
+        $data['slug'] = Post::generateSlug($request['title']);
+        $post = Post::find($id);
+        $data = $request->all();
+        $post->update($data);
+        return redirect()->route('admin.posts.show', compact('post'));
     }
 
     /**
@@ -80,6 +107,9 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $post = Post::find($id);
+        $titolo = $post->title;
+        $post->delete();
+        return redirect()->route('admin.posts.index', compact('titolo'))->with('confirm', 'Hai eliminato correttamente il post ')->with('titolo', $titolo);
     }
 }
