@@ -37,6 +37,18 @@
                 @endforeach
             </tbody>
         </table>
+
+        @foreach ($categories as $category)
+            <h1>{{ $category->name }}</h1>
+            <ul>
+            @forelse ($category->posts as $post)
+                <li>{{ $post->title }} categoria: {{ $post->category->name }}</li>
+            @empty
+               <p> Nessun post per questa categoria</p>
+            @endforelse
+            </ul>
+
+        @endforeach
     </div>
 
 @endsection
