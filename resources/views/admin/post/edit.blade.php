@@ -15,6 +15,17 @@
                   @enderror
               </div>
               <div class="mb-3">
+                <select name="category_id" id="category_id">
+                  <option value="">Seleziona una categoria</option>
+                  @foreach ($categories as $category)
+                  <option {{ old('category_id', $post->category_id) == $category->id ? 'selected' : ''  }} value="{{ $category->id }}">{{ $category->name }}</option>
+
+                  @endforeach
+
+                </select>
+
+              </div>
+              <div class="mb-3">
                 <label for="text" class="form-label">Testo del Post</label>
                 <input type="text" class="form-control @error('text') is-invalid @enderror" name="text" id="text"  value='{{ old('text', $post->text) }}'>
                   @error('text')

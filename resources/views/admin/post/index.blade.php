@@ -23,7 +23,7 @@
                     <tr>
                         <td>{{ $post->id }}</td>
                         <td>{{ $post->title }}</td>
-                        <td>{{ $post->category->name }}</td>
+                        <td>{{ $post->category ? $post->category->name : 'Categoria non assegnata' }}</td>
                         <td>
                             <a class="btn btn-primary" href="{{ route('admin.posts.show', $post) }}">MOSTRA</a>
                             <a class="btn btn-warning" href="{{ route('admin.posts.edit', $post) }}">EDIT</a>
